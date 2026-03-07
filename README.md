@@ -144,7 +144,58 @@ guaranteeing the optimal path.
 
 ## Part 3 — UGV Navigation with Dynamic Obstacles
 
-> 🔧 Coming soon
+### Problem
+
+In real battlefield environments, obstacles are **not all known a-priori**
+and can appear or change during navigation. The UGV must detect and respond
+to new obstacles in real time.
+
+### Algorithm: Replanning A* (Simplified D* Lite)
+
+Strategy:
+1. Plan initial path using A* on known grid (unknown cells treated as free)
+2. Move step by step along planned path
+3. Sense environment within **5-cell sensor range** after each step
+4. If newly discovered obstacle blocks remaining path → **REPLAN** from current position
+5. Repeat until goal reached or truly unreachable
+
+> Reference: AIMA Chapter 4 — Search in Partially Observable Environments
+
+### Key Difference from Static UGV
+
+| Feature | Static (Part 2) | Dynamic (Part 3) |
+|---------|----------------|------------------|
+| Obstacles known | All a-priori | Discovered during navigation |
+| Algorithm | A* (one plan) | Replanning A* |
+| Replans | 0 | Multiple |
+| Environment | Fully observable | Partially observable |
+
+### Results
+
+| Density | Found | Steps | Path Length | Replans | Nodes Expanded | Time |
+|---------|-------|-------|-------------|---------|----------------|------|
+| Low 20% | Yes | 65 | 86.94 units | 9 | 706 | 10.99ms |
+| Medium 40% | Yes | 74 | 93.04 units | 25 | 2906 | 22.48ms |
+| High 60% | No | — | — | — | — | — |
+
+### Key Observations
+- More obstacles → more replans → more nodes expanded → higher time
+- Medium density triggers 25 replans vs only 9 for low density
+- At very high densities (≈60%) the grid may be disconnected from the start
+- Unknown cells are treated optimistically as free during planning
+- Sensor range of 5 cells gives UGV local awareness without global knowledge
+
+### How to Run
+```bash
+cd UGV_Dynamic
+python3 ugv_dynamic.py demo     # all 3 density levels
+python3 ugv_dynamic.py          # interactive mode
+```
+
+### Files
+- `UGV_Dynamic/dynamic_grid.py` — grid with dynamic obstacle generation and sensor model
+- `UGV_Dynamic/replan_astar.py` — replanning A* implementation
+- `UGV_Dynamic/ugv_dynamic.py` — main runner with performance metrics
 
 ---
 
