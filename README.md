@@ -1,16 +1,17 @@
-# AI Assignment 3
+# AI Assignment 3 — Search Algorithms
 
 **Subject:** Artificial Intelligence
-**Reference:** Russell & Norvig — *Artificial Intelligence: A Modern Approach (AIMA)*
+**Reference:** Russell & Norvig — *Artificial Intelligence: A Modern Approach (AIMA, 4th Ed.)*
 
 ---
 
 ## Table of Contents
 1. [Project Structure](#project-structure)
 2. [Part 1 — Dijkstra / Uniform Cost Search](#part-1--dijkstra--uniform-cost-search)
-3. [How to Run](#how-to-run)
-4. [Demo Output](#demo-output)
-5. [References](#references)
+3. [Part 2 — UGV Navigation with Static Obstacles](#part-2--ugv-navigation-with-static-obstacles)
+4. [Part 3 — UGV Navigation with Dynamic Obstacles](#part-3--ugv-navigation-with-dynamic-obstacles)
+5. [How to Run](#how-to-run)
+6. [References](#references)
 
 ---
 
@@ -21,9 +22,19 @@ AI_Assignment_3/
 ├── README.md
 ├── requirements.txt
 │
-└── Dijkstra/
-    ├── india_cities.py       # Road graph of Indian cities
-    └── ucs_dijkstra.py       # Uniform Cost Search implementation
+├── Dijkstra/
+│   ├── india_cities.py         # Road graph of 50+ Indian cities
+│   └── ucs_dijkstra.py         # Uniform Cost Search implementation
+│
+├── UGV_Static/
+│   ├── grid_map.py             # 70x70 grid generator (3 density levels)
+│   ├── astar.py                # A* search implementation
+│   └── ugv_static.py           # Main runner with performance metrics
+│
+└── UGV_Dynamic/
+    ├── dynamic_grid.py         # Grid with dynamic obstacle generation
+    ├── d_star.py               # D* / replanning A* implementation
+    └── ugv_dynamic.py          # Main runner
 ```
 
 ---
@@ -32,49 +43,39 @@ AI_Assignment_3/
 
 ### What is Uniform Cost Search?
 
-When actions have different costs, the obvious choice for best-first search
-is to use the **path cost g(n)** as the evaluation function.
+When actions have different costs, the best strategy is to expand the node
+with the **lowest path cost g(n)**. This is called:
 
-This is called:
-- **Dijkstra's Algorithm** — by the theoretical computer science community
+- **Dijkstra's Algorithm** — by the computer science community
 - **Uniform Cost Search (UCS)** — by the AI community
 
-> Reference: AIMA Chapter 3 — UCS is a special case of Best-First Search where f(n) = g(n)
-
----
+> UCS is a special case of Best-First Search where **f(n) = g(n)**
+> — AIMA Chapter 3
 
 ### Algorithm
 ```
 1. Initialize frontier = priority queue with (cost=0, start_city)
-2. Pop node with lowest path cost
+2. Pop node with lowest path cost g(n)
 3. If node == goal → return path
 4. Mark node as explored
 5. For each neighbour:
       new_cost = current_cost + edge_cost
-      if neighbour not explored → add to frontier
+      if not explored → push to frontier
 6. Repeat until goal found or frontier empty
 ```
-
----
 
 ### Properties
 
 | Property | Value |
 |----------|-------|
-| Complete | Yes (if solution exists) |
-| Optimal | Yes (expands lowest cost first) |
+| Complete | Yes |
+| Optimal | Yes — always finds lowest cost path |
 | Time Complexity | O(b^(1 + C*/ε)) |
 | Space Complexity | O(b^(1 + C*/ε)) |
 
-Where C* = optimal solution cost, ε = minimum edge cost, b = branching factor
-
----
-
 ### India Road Network
 
-The graph contains **50+ major Indian cities** with real approximate road distances.
-
-Cities covered across all regions:
+Graph contains **50+ major Indian cities** with real approximate road distances.
 
 | Region | Cities |
 |--------|--------|
@@ -86,29 +87,64 @@ Cities covered across all regions:
 | Rajasthan | Jaipur, Jodhpur, Udaipur, Ajmer |
 | UP | Lucknow, Agra, Varanasi, Allahabad, Kanpur |
 
+### Results
+
+| Route | Shortest Path | Distance | Nodes Expanded |
+|-------|--------------|----------|----------------|
+| Delhi → Mumbai | Delhi → Jaipur → Ahmedabad → Mumbai | 1476 km | 36 |
+| Chennai → Delhi | Chennai → Hyderabad → ... → Agra → Delhi | 2101 km | 33 |
+| Amritsar → Trivandrum | Amritsar → Delhi → ... → Madurai → Trivandrum | 3233 km | 53 |
+| Jaipur → Kolkata | Jaipur → Agra → ... → Gaya → Kolkata | 1594 km | 39 |
+| Mumbai → Guwahati | Mumbai → Nagpur → ... → Siliguri → Guwahati | 2910 km | 53 |
+
 ---
 
-### Sample Results
+## Part 2 — UGV Navigation with Static Obstacles
 
-| Route | Shortest Path | Distance |
-|-------|--------------|----------|
-| Delhi → Mumbai | Delhi → Jaipur → Ahmedabad → Mumbai | 1476 km |
-| Chennai → Delhi | Chennai → Hyderabad → Nagpur → Jhansi → Gwalior → Agra → Delhi | 2101 km |
-| Amritsar → Trivandrum | Amritsar → Delhi → ... → Madurai → Trivandrum | 3233 km |
-| Jaipur → Kolkata | Jaipur → Agra → Kanpur → Allahabad → Varanasi → Gaya → Kolkata | 1594 km |
+### Problem
+
+An Unmanned Ground Vehicle (UGV) must find the optimal path from a
+user-specified start node to a goal node on a **70×70 grid battlefield**.
+Obstacles are known **a-priori** (static environment).
+
+### Algorithm: A* Search (Informed Search)
+
+A* uses **f(n) = g(n) + h(n)** where:
+
+| Symbol | Meaning |
+|--------|---------|
+| g(n) | Actual cost from start to current node |
+| h(n) | Heuristic estimate from current node to goal |
+| f(n) | Total estimated path cost |
+
+**Heuristic (Euclidean Distance):**
+```
+h(n) = √((x_goal − x)² + (y_goal − y)²)
+```
+
+This heuristic is **admissible** — it never overestimates the true cost,
+guaranteeing the optimal path.
+
+### Obstacle Density Levels
+
+| Level | Obstacle % | Path Found | Path Length | Nodes Expanded | Time |
+|-------|-----------|------------|-------------|----------------|------|
+| Low | 20% | Yes | 86.36 units | 606 | 8.9ms |
+| Medium | 40% | Yes | 92.22 units | 852 | 8.3ms |
+| High | 60% | No | N/A | 29 | 0.17ms |
+
+### Key Observations
+- Higher obstacle density forces the algorithm to take longer detours
+- The number of expanded nodes increases as the environment becomes more constrained
+- At very high densities (≈60%) the grid may become disconnected, making the goal unreachable
+- A* expands far fewer nodes than uninformed search (BFS/DFS) due to heuristic guidance
+- Movement is 8-directional — diagonal moves cost √2 ≈ 1.414
 
 ---
 
-### Measures of Effectiveness
+## Part 3 — UGV Navigation with Dynamic Obstacles
 
-| Route | Nodes Expanded | Nodes Generated |
-|-------|---------------|-----------------|
-| Delhi → Mumbai | 36 | 75 |
-| Chennai → Delhi | 33 | 74 |
-| Bangalore → Patna | 34 | 80 |
-| Amritsar → Trivandrum | 53 | 103 |
-| Jaipur → Kolkata | 39 | 79 |
-| Mumbai → Guwahati | 53 | 101 |
+> 🔧 Coming soon
 
 ---
 
@@ -119,38 +155,25 @@ Cities covered across all regions:
 pip install -r requirements.txt
 ```
 
-### Interactive mode — enter any two cities
+### Part 1 — Dijkstra / UCS
 ```bash
 cd Dijkstra
-python3 ucs_dijkstra.py
+python3 ucs_dijkstra.py demo          # 6 preset routes
+python3 ucs_dijkstra.py               # interactive mode
+python3 ucs_dijkstra.py Delhi Mumbai  # direct query
 ```
 
-### Demo mode — runs 6 preset routes
+### Part 2 — UGV Static Obstacles
 ```bash
-cd Dijkstra
-python3 ucs_dijkstra.py demo
+cd UGV_Static
+python3 ugv_static.py demo            # all 3 density levels
+python3 ugv_static.py                 # interactive mode
 ```
 
-### Command line — direct query
+### Part 3 — UGV Dynamic Obstacles
 ```bash
-cd Dijkstra
-python3 ucs_dijkstra.py Delhi Mumbai
-```
-
----
-
-## Demo Output
-```
-UNIFORM COST SEARCH (DIJKSTRA)
-From : Delhi
-To   : Mumbai
-
-Shortest Path (3 hops):
-Delhi → Jaipur → Ahmedabad → Mumbai
-
-Total Distance : 1476 km
-Nodes Expanded : 36
-Nodes Generated: 75
+cd UGV_Dynamic
+python3 ugv_dynamic.py demo           # coming soon
 ```
 
 ---
@@ -159,3 +182,4 @@ Nodes Generated: 75
 
 1. Russell, S., & Norvig, P. (2021). *Artificial Intelligence: A Modern Approach* (4th Edition). Pearson.
 2. Road distances sourced from open map data (approximate values).
+3. Hart, P., Nilsson, N., Raphael, B. (1968). *A Formal Basis for the Heuristic Determination of Minimum Cost Paths.* IEEE Transactions on Systems Science and Cybernetics.
