@@ -73,6 +73,10 @@ with the **lowest path cost g(n)**. This is called:
 | Time Complexity | O(b^(1 + C*/ε)) |
 | Space Complexity | O(b^(1 + C*/ε)) |
 
+### Uniform Cost Search Visualization
+
+![Dijkstra Algorithm](images/dijkstra_example.png)
+
 ### India Road Network
 
 Graph contains **50+ major Indian cities** with real approximate road distances.
@@ -133,6 +137,10 @@ guaranteeing the optimal path.
 | Medium | 40% | Yes | 92.22 units | 852 | 8.3ms |
 | High | 60% | No | N/A | 29 | 0.17ms |
 
+### A* Pathfinding on Grid
+
+![A* Grid Pathfinding](images/astar_grid.png)
+
 ### Key Observations
 - Higher obstacle density forces the algorithm to take longer detours
 - The number of expanded nodes increases as the environment becomes more constrained
@@ -177,6 +185,10 @@ Strategy:
 | Low 20% | Yes | 65 | 86.94 units | 9 | 706 | 10.99ms |
 | Medium 40% | Yes | 74 | 93.04 units | 25 | 2906 | 22.48ms |
 | High 60% | No | — | — | — | — | — |
+
+### Dynamic Obstacle Replanning
+
+![Dynamic Replanning](images/dynamic_replanning.png)
 
 ### Key Observations
 - More obstacles → more replans → more nodes expanded → higher time
