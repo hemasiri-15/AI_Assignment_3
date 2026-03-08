@@ -33,11 +33,11 @@ AI_Assignment_3/
 │
 └── UGV_Dynamic/
     ├── dynamic_grid.py         # Grid with dynamic obstacle generation
-    ├── d_star.py               # D* / replanning A* implementation
+    ├── replan_astar.py         # D* / Replanning A* implementation
     └── ugv_dynamic.py          # Main runner
 ```
 
----
+--- 
 
 ## Part 1 — Dijkstra / Uniform Cost Search
 
@@ -236,7 +236,7 @@ python3 ugv_static.py                 # interactive mode
 ### Part 3 — UGV Dynamic Obstacles
 ```bash
 cd UGV_Dynamic
-python3 ugv_dynamic.py demo           # coming soon
+python3 ugv_dynamic.py demo           # all 3 density levels
 ```
 
 ---
