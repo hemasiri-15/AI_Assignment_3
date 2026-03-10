@@ -237,6 +237,8 @@ cd Dijkstra
 python3 ucs_dijkstra.py demo          # 6 preset routes
 python3 ucs_dijkstra.py               # interactive mode
 python3 ucs_dijkstra.py Delhi Mumbai  # direct query
+
+> **Bonus:** An interactive React web demo is available in `Dijkstra/web_demo/` — paste `App.jsx` into [codesandbox.io](https://codesandbox.io) for instant browser visualization.
 ```
 
 ### Part 2 — UGV Static Obstacles
