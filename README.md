@@ -22,9 +22,17 @@ AI_Assignment_3/
 ├── README.md
 ├── requirements.txt
 │
+├── images/
+│   ├── dijkstra_example.png    # UCS/Dijkstra graph visualization
+│   ├── astar_grid.png          # A* grid pathfinding diagram
+│   └── dynamic_replanning.png  # Dynamic obstacle replanning diagram
+│
 ├── Dijkstra/
 │   ├── india_cities.py         # Road graph of 50+ Indian cities
-│   └── ucs_dijkstra.py         # Uniform Cost Search implementation
+│   ├── ucs_dijkstra.py         # Uniform Cost Search implementation
+│   └── web_demo/
+│       ├── App.jsx             # React interactive visualization (bonus)
+│       └── README.md           # Web demo instructions
 │
 ├── UGV_Static/
 │   ├── grid_map.py             # 70x70 grid generator (3 density levels)
@@ -33,8 +41,8 @@ AI_Assignment_3/
 │
 └── UGV_Dynamic/
     ├── dynamic_grid.py         # Grid with dynamic obstacle generation
-    ├── replan_astar.py         # D* / Replanning A* implementation
-    └── ugv_dynamic.py          # Main runner
+    ├── replan_astar.py         # Replanning A* (simplified D* Lite)
+    └── ugv_dynamic.py          # Main runner with performance metrics
 ```
 
 --- 
