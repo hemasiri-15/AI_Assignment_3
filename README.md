@@ -141,6 +141,9 @@ guaranteeing the optimal path.
 
 ![A* Grid Pathfinding](images/astar_grid.png)
 
+> **Note:** Diagram shows Low (20%) and Medium (40%) density cases where path was found.
+> High density (60%) case is not shown — at 60% obstacle coverage the grid becomes disconnected and no path exists from start to goal.
+
 ### Key Observations
 - Higher obstacle density forces the algorithm to take longer detours
 - The number of expanded nodes increases as the environment becomes more constrained
@@ -189,6 +192,8 @@ Strategy:
 ### Dynamic Obstacle Replanning
 
 ![Dynamic Replanning](images/dynamic_replanning.png)
+
+> **Note:** High density (60%) case not shown — initial path could not be found due to disconnected grid.
 
 ### Key Observations
 - More obstacles → more replans → more nodes expanded → higher time
