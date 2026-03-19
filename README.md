@@ -252,6 +252,16 @@ cd UGV_Dynamic
 python3 ugv_dynamic.py demo           # all 3 density levels
 ```
 
+## Conclusion
+
+This project demonstrates how classical AI search algorithms can be applied to real-world navigation problems.
+
+- Dijkstra/UCS guarantees optimal paths in weighted graphs
+- A* improves efficiency using heuristics
+- Replanning A* enables adaptation in dynamic environments
+
+The transition from static to dynamic environments highlights the importance of intelligent decision-making under uncertainty, a key challenge in modern AI systems.
+
 ---
 
 ## References
