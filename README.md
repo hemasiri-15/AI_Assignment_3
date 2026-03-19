@@ -215,13 +215,6 @@ This approach approximates D* Lite, which is used in real robotic navigation sys
 - Unknown cells are treated optimistically as free during planning
 - Sensor range of 5 cells gives UGV local awareness without global knowledge
 
-### How to Run
-```bash
-cd UGV_Dynamic
-python3 ugv_dynamic.py demo     # all 3 density levels
-python3 ugv_dynamic.py          # interactive mode
-```
-
 ### Files
 - `UGV_Dynamic/dynamic_grid.py` — grid with dynamic obstacle generation and sensor model
 - `UGV_Dynamic/replan_astar.py` — replanning A* implementation
