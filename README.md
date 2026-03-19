@@ -72,6 +72,9 @@ with the **lowest path cost g(n)**. This is called:
 6. Repeat until goal found or frontier empty
 ```
 
+UCS expands nodes in order of increasing path cost and guarantees optimal solution, 
+unlike BFS which ignores edge costs entirely.
+
 ### Properties
 
 | Property | Value |
@@ -134,7 +137,7 @@ A* uses **f(n) = g(n) + h(n)** where:
 h(n) = √((x_goal − x)² + (y_goal − y)²)
 ```
 
-This heuristic is **admissible** — it never overestimates the true cost,
+This heuristic is **admissible** and consistent — it never overestimates the true cost,
 guaranteeing the optimal path.
 
 ### Obstacle Density Levels
@@ -177,6 +180,8 @@ Strategy:
 3. Sense environment within **5-cell sensor range** after each step
 4. If newly discovered obstacle blocks remaining path → **REPLAN** from current position
 5. Repeat until goal reached or truly unreachable
+
+This approach approximates D* Lite, which is used in real robotic navigation systems.
 
 > Reference: AIMA Chapter 4 — Search in Partially Observable Environments
 

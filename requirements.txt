@@ -1,2 +1,4 @@
 # No external dependencies required
 # Python standard library only: heapq
+matplotlib
+
